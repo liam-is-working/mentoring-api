@@ -1,0 +1,3 @@
+com\example\mentoringapis\configuration\MentoringApisConfig.class
+com\example\mentoringapis\controller\DummyController.class
+com\example\mentoringapis\MentoringApisApplication.class
