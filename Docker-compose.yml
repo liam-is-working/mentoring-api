@@ -1,1 +1,12 @@
-docker run -itd -e POSTGRES_USER=liam -e POSTGRES_PASSWORD=123 -p 5432:5432 -v /data:/var/lib/postgresql/data --name postgresql_db postgres
+version: '2'
+services:
+  db:
+      image: postgres:latest
+      restart: always
+      environment:
+        - POSTGRES_USER=liam
+        - POSTGRES_PASSWORD=123
+      ports:
+        - '5432:5432'
+      volumes:
+        - ./init.sql:/docker-entrypoint-initdb.d/init.sql

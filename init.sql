@@ -1,23 +1,22 @@
-CREATE table Accounts
+GRANT ALL PRIVILEGES ON DATABASE postgres TO liam;
+
+CREATE table accounts
 (
     id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     email           varchar(50) UNIQUE NOT NULL,
-    password        varchar(100),
-    isEmailVerified boolean,
-    isMentor        boolean
+    firebase_uuid    varchar(50) UNIQUE NOT NULL,
+    is_mentor        boolean
 );
 
 CREATE TYPE gender AS ENUM ('male', 'female', 'unknown');
 
-create table UserProfiles
+create table user_profiles
 (
-    accountId   uuid PRIMARY KEY REFERENCES Accounts (id),
-    fname       varchar(255),
-    lname       varchar(255),
+    account_id   uuid PRIMARY KEY REFERENCES Accounts (id),
+    full_name    varchar(255),
     description text,
-    DOB         date,
-    gender      gender,
-    avatarURL   varchar(255),
-    coverURL    varchar(255)
+    dob         varchar(255),
+    gender      varchar(255),
+    avatar_url   varchar(255),
+    cover_url    varchar(255)
 )
-
