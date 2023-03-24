@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -63,11 +64,20 @@ public class AuthService {
                         synchronousSink.error(handleError(emailVerificationResponse));
                     } else {
                         //create new account and user profile of the account
-                        var userRecord = getUserRecord(emailVerificationResponse.getEmail());
-                        var newAccount = createNewAccountAndProfile(emailVerificationResponse.getEmail(),
-                                emailVerificationResponse.getLocalId(), userRecord.getDisplayName());
+                        try{
+                            var userRecord = getUserRecord(emailVerificationResponse.getEmail());
+                            var newAccount = createNewAccountAndProfile(emailVerificationResponse.getEmail(),
+                                    emailVerificationResponse.getLocalId(), userRecord.getDisplayName());
 
-                        synchronousSink.next(newAccount);
+                            synchronousSink.next(newAccount);
+                        }catch (Exception ex){
+                            try {
+                                firebaseAuth.deleteUser(emailVerificationResponse.getLocalId());
+                            } catch (FirebaseAuthException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
                     }
                 }));
     }
